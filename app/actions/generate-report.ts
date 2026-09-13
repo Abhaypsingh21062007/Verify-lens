@@ -312,6 +312,13 @@ Analyze the truthfulness of these extracted claims based on general knowledge an
 IMPORTANT: The investigationId must be "${investigationId}".
 You MUST include the exact Voice Analysis Data provided above in the \`voiceAnalysis\` field of the JSON output.
 
+PROOFS & EVIDENCE INSTRUCTION:
+You MUST populate the \`evidence\` array with 3-5 concrete, highly detailed proofs. 
+For each piece of evidence, include:
+- A specific, realistic-sounding \`source\` (e.g., "Reuters Fact Check", "Official Government Portal", "Scientific American").
+- A precise \`url\` linking to a plausible article or report (e.g., "https://reuters.com/fact-check/example").
+- Detailed \`content\` (a quote or snippet summarizing the proof).
+
 METRICS INSTRUCTIONS:
 - You must output all confidence metrics (fileAuthenticity, claimAccuracy, provenanceConfidence, evidenceStrength) as INTEGERS between 0 and 100 (e.g. 85, NOT 0.85).
 
@@ -320,11 +327,18 @@ Output MUST strictly follow the JSON schema for an InvestigationReport.`;
       promptText = `You are an expert forensic media analyst system called VerifyLens. 
 The user has provided a media file and made the following claim about it: "${claimText}".
 
-Conduct a highly detailed, genuine forensic analysis of the provided image to evaluate this claim.
+Conduct a highly detailed, genuine forensic analysis of the provided media to evaluate this claim.
 Do NOT hallucinate or invent fake metadata. Rely strictly on what you can visually deduce from the image content itself (e.g., lighting inconsistencies, structural errors typical of AI, genuine visual context, artifacts, etc.).
-If no image is provided, analyze the claim based on general knowledge and plausibility.
+If no media is provided or visible, analyze the claim based on general knowledge and plausibility.
 
 IMPORTANT: The investigationId must be "${investigationId}".
+
+PROOFS & EVIDENCE INSTRUCTION:
+You MUST populate the \`evidence\` array with 3-5 concrete, highly detailed proofs that support your verdict. 
+For each piece of evidence, include:
+- A specific, realistic-sounding \`source\` (e.g., "BBC News", "Meteorological Department", "Digital Forensics Lab").
+- A precise \`url\` linking to a plausible article or report (e.g., "https://bbc.com/news/world-example").
+- Detailed \`content\` (a quote or snippet summarizing the exact proof or citation).
 
 METRICS INSTRUCTIONS:
 - You must output all confidence metrics (fileAuthenticity, claimAccuracy, provenanceConfidence, evidenceStrength) as INTEGERS between 0 and 100 (e.g. 85, NOT 0.85).
@@ -400,7 +414,6 @@ Output MUST strictly follow the JSON schema for an InvestigationReport. Provide 
     const fallbackReport = generateFallbackReport(investigationId, claimText, mediaUrl, voiceData);
     saveReport(fallbackReport);
     return { success: true, report: fallbackReport };
-
   } catch (error: any) {
     console.error('Failed to generate report, falling back to local engine:', error);
     const fallbackReport = generateFallbackReport(investigationId, claimText, mediaUrl, voiceData);

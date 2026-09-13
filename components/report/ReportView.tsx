@@ -12,6 +12,7 @@ import ExplainabilityPanel from './ExplainabilityPanel';
 import ProvenancePassport from './ProvenancePassport';
 import TranscriptPanel from './TranscriptPanel';
 import SocialDebunkCardModal from './SocialDebunkCardModal';
+import ProofsPanel from './ProofsPanel';
 import { 
   ShieldCheck, 
   ShieldAlert, 
@@ -68,6 +69,7 @@ export default function ReportView({ report, isShared = false }: ReportViewProps
 
   const tabs = [
     { id: 'overview', label: 'Summary & Facts', icon: LayoutGrid, desc: 'Overall verdict and quick breakdown' },
+    { id: 'proofs', label: 'Proofs & Citations', icon: ShieldCheck, desc: 'Detailed evidence and citations' },
     { id: 'graph', label: 'Evidence Graph', icon: GitGraph, desc: 'Visual connection between sources and claims' },
     { id: 'timeline', label: 'Timeline', icon: Clock, desc: 'When this media first appeared online' },
     { id: 'explainability', label: 'AI Forensics', icon: ScanEye, desc: 'Visual, audio, and face analysis' },
@@ -373,6 +375,10 @@ export default function ReportView({ report, isShared = false }: ReportViewProps
                 )}
               </div>
             </div>
+          )}
+
+          {activeTab === 'proofs' && (
+            <ProofsPanel evidence={report.evidence} />
           )}
 
           {activeTab === 'graph' && (
