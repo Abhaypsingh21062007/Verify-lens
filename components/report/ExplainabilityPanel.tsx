@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import HeatmapViewer from '@/components/forensics/HeatmapViewer';
+import ForensicHeatmapSlider from '@/components/forensics/ForensicHeatmapSlider';
 
 // ── Metric badge ────────────────────────────────────────────
 
@@ -154,13 +155,9 @@ export default function ExplainabilityPanel({ data }: ExplainabilityPanelProps) 
 
       <div className="space-y-6">
         
-        {/* 1. Visual Forensics Heatmap (Interactive) */}
+        {/* 1. Visual Forensics Split-Screen & Heatmap Slider (Interactive) */}
         <div>
-          <div className="mb-2 flex items-center gap-2 px-1">
-            <Eye className="h-5 w-5 text-accent-blue" />
-            <h3 className="text-lg font-bold text-foreground">Visual Forensics Heatmap</h3>
-          </div>
-          <HeatmapViewer mediaUrl="demo-video-1.mp4" mediaType="video" />
+          <ForensicHeatmapSlider score={data.visual?.score || 85} />
         </div>
 
         {/* 2. Audio Analysis */}

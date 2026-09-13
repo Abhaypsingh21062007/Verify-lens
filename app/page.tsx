@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { features } from '@/lib/mock-data';
 
+import SampleCaseSelector from '@/components/investigation/SampleCaseSelector';
+
 const iconMap: Record<string, typeof ScanSearch> = {
   ScanSearch,
   History,
@@ -97,7 +99,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Feature Cards ─────────────────────────────── */}
-      <section className="relative px-4 sm:px-6 lg:px-8 pb-24">
+      <section className="relative px-4 sm:px-6 lg:px-8 pb-20">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, i) => {
@@ -131,6 +133,13 @@ export default function HomePage() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ── Interactive Demo Studies Section ───────────── */}
+      <section className="relative px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="mx-auto max-w-6xl">
+          <SampleCaseSelector />
         </div>
       </section>
 

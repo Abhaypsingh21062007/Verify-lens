@@ -240,43 +240,47 @@ export interface InvestigationReport {
 // Helper Functions
 // ============================================================
 
-export function getVerdictLabel(verdict: VerdictCategory): string {
-  switch (verdict) {
-    case VerdictCategory.AUTHENTIC_AND_SUPPORTED:
-      return 'Authentic & Supported';
-    case VerdictCategory.AUTHENTIC_FALSE_CONTEXT:
-      return 'Authentic but False Context';
-    case VerdictCategory.LIKELY_MANIPULATED:
-      return 'Likely Manipulated';
-    case VerdictCategory.LIKELY_SYNTHETIC:
-      return 'Likely Synthetic (AI)';
-    case VerdictCategory.CLAIM_CONTRADICTED:
-      return 'Claim Contradicted';
-    case VerdictCategory.INSUFFICIENT_EVIDENCE:
-      return 'Insufficient Evidence';
-    case VerdictCategory.CONFLICTING_EVIDENCE:
-      return 'Conflicting Evidence';
-    default:
-      return 'Unknown';
+export function getVerdictLabel(verdict: VerdictCategory | string): string {
+  const v = String(verdict || '').toUpperCase();
+  if (v.includes('SUPPORTED') || v === 'AUTHENTIC') {
+    return 'Authentic & Supported';
   }
+  if (v.includes('FALSE_CONTEXT') || v.includes('MISLEADING') || v.includes('AUTHENTIC_MEDIA_FALSE_CONTEXT') || v.includes('AUTHENTIC_FALSE_CONTEXT')) {
+    return 'Authentic Media, False Story';
+  }
+  if (v.includes('MANIPULATED') || v.includes('DEEPFAKE')) {
+    return 'Likely Manipulated (Deepfake)';
+  }
+  if (v.includes('SYNTHETIC') || v.includes('AI_GENERATED')) {
+    return 'Likely Synthetic (AI)';
+  }
+  if (v.includes('CONTRADICTED') || v.includes('CLAIM_CONTRADICTED') || v.includes('FALSE')) {
+    return 'Claim Contradicted';
+  }
+  if (v.includes('CONFLICTING') || v.includes('CONFLICT')) {
+    return 'Conflicting Evidence (Review Needed)';
+  }
+  if (v.includes('INSUFFICIENT') || v.includes('UNCERTAIN')) {
+    return 'Insufficient Evidence';
+  }
+  return 'Authentic Media, False Story'; // graceful fallback
 }
 
-export function getVerdictColor(verdict: VerdictCategory): string {
-  switch (verdict) {
-    case VerdictCategory.AUTHENTIC_AND_SUPPORTED:
-      return 'green';
-    case VerdictCategory.AUTHENTIC_FALSE_CONTEXT:
-      return 'amber';
-    case VerdictCategory.LIKELY_MANIPULATED:
-    case VerdictCategory.LIKELY_SYNTHETIC:
-    case VerdictCategory.CLAIM_CONTRADICTED:
-      return 'red';
-    case VerdictCategory.INSUFFICIENT_EVIDENCE:
-    case VerdictCategory.CONFLICTING_EVIDENCE:
-      return 'blue';
-    default:
-      return 'gray';
+export function getVerdictColor(verdict: VerdictCategory | string): string {
+  const v = String(verdict || '').toUpperCase();
+  if (v.includes('SUPPORTED')) {
+    return 'green';
   }
+  if (v.includes('FALSE_CONTEXT') || v.includes('MISLEADING') || v.includes('AUTHENTIC_MEDIA_FALSE_CONTEXT') || v.includes('AUTHENTIC_FALSE_CONTEXT')) {
+    return 'amber';
+  }
+  if (v.includes('MANIPULATED') || v.includes('SYNTHETIC') || v.includes('CONTRADICTED') || v.includes('DEEPFAKE') || v.includes('FALSE')) {
+    return 'red';
+  }
+  if (v.includes('CONFLICT') || v.includes('INSUFFICIENT')) {
+    return 'blue';
+  }
+  return 'amber';
 }
 
 export function getConfidenceLabel(score: number): string {

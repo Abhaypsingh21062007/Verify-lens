@@ -20,26 +20,20 @@ interface ProcessingClientProps {
 }
 
 const DEFAULT_STEPS = [
-  "Input received",
-  "Media fingerprint generated",
-  "Frames and audio extracted",
-  "Claim and entities identified",
-  "Metadata and provenance checked",
-  "Visual manipulation analysis",
-  "Audio and lip-sync analysis",
-  "Earlier versions searched",
-  "Evidence sources retrieved",
-  "Counterfactual test completed",
-  "Evidence graph built",
-  "Explainable report generated"
+  "Media uploaded and verified",
+  "Checking visual integrity & AI generation markers",
+  "Inspecting audio and facial consistency",
+  "Tracing earliest web appearance & history",
+  "Cross-referencing claims against verified databases",
+  "Building evidence web and final report"
 ];
 
 const VOICE_STEPS = [
-  "Audio received",
-  "Transcribing with Gnani AI",
-  "Language detected",
-  "Claim extracted",
-  "Verification report ready"
+  "Audio voice note received",
+  "Transcribing spoken speech and detecting language",
+  "Extracting factual claims from speech",
+  "Cross-referencing claims against verified databases",
+  "Generating final speech & verification report"
 ];
 
 const EDUCATIONAL_TIPS = [
@@ -68,12 +62,15 @@ export default function ProcessingClient({ investigationId, claimText, mediaUrl,
 
     const runVoiceAnalysis = async () => {
       try {
-        const formData = new FormData();
-        // Since we don't have the file object here, we'd normally pass the URL and have the server fetch it.
-        // For demo, the mock API ignores the file anyway.
-        formData.append('file', 'mock-file');
-
-        const res = await fetch('/api/transcribe', { method: 'POST', body: formData });
+        const res = await fetch('/api/transcribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mediaUrl,
+            claimText,
+            investigationId,
+          }),
+        });
         const data = await res.json();
         
         if (!data.success) {
@@ -84,12 +81,12 @@ export default function ProcessingClient({ investigationId, claimText, mediaUrl,
 
         // Pass voice data to generate report
         const { generateInvestigationReport } = await import('@/app/actions/generate-report');
-        const reportRes = await generateInvestigationReport(investigationId, claimText, mediaUrl, data);
+        const reportRes = await generateInvestigationReport(investigationId, claimText || data.transcript, mediaUrl, data);
         
         if (reportRes.success) {
           reportGenerated = true;
           setLogs(prev => [
-            { time: new Date().toLocaleTimeString(), message: `AI Report generated successfully.` },
+            { time: new Date().toLocaleTimeString(), message: `Voice AI Report generated successfully.` },
             ...prev
           ].slice(0, 10));
         } else {
