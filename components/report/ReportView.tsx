@@ -382,8 +382,8 @@ export default function ReportView({ report, isShared = false }: ReportViewProps
                 <p className="text-xs text-muted">Click or hover over nodes to explore how the claim connects to verified data points.</p>
               </div>
               <EvidenceGraph
-                nodes={report.knowledgeGraph.nodes}
-                edges={report.knowledgeGraph.edges}
+                nodes={report.knowledgeGraph?.nodes || []}
+                edges={report.knowledgeGraph?.edges || []}
               />
             </div>
           )}
@@ -394,7 +394,7 @@ export default function ReportView({ report, isShared = false }: ReportViewProps
                 <h3 className="text-base font-bold text-foreground">Media & Story Timeline</h3>
                 <p className="text-xs text-muted">Chronological footprint of when this image/video first appeared on the web versus the claim date.</p>
               </div>
-              <MediaTimeline events={report.timeline} />
+              <MediaTimeline events={report.timeline || []} />
             </div>
           )}
 
@@ -414,7 +414,11 @@ export default function ReportView({ report, isShared = false }: ReportViewProps
                 <h3 className="text-base font-bold text-foreground">Matched Web & News Sources</h3>
                 <p className="text-xs text-muted">Fact-checks, official government releases, and news reports that reference this media.</p>
               </div>
-              <SourceIndependence data={report.sourceIndependence!} />
+              {report.sourceIndependence ? (
+                <SourceIndependence data={report.sourceIndependence} />
+              ) : (
+                <p className="text-sm text-muted">No external web source clustering available.</p>
+              )}
             </div>
           )}
 
